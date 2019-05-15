@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1019236529164",
+    "firebase_url": "https://shopsmart881.firebaseio.com",
+    "project_id": "shopsmart881",
+    "storage_bucket": "shopsmart881.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1019236529164:android:73b7551d07dc4e5a",
+        "android_client_info": {
+          "package_name": "ricardo.com.example.shop_smart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1019236529164-1e18u9fpqfrtq4h1n0c4ite9iveujlu3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQcLKxs6r7uCa8ieZ1I5ducgJxBGGwflo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1019236529164-1e18u9fpqfrtq4h1n0c4ite9iveujlu3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -18,7 +18,6 @@
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        debugShowCheckedModeBanner: false,
         home: MyHomePage(title: 'Shop Smart'),
       );
     }

@@ -68,7 +68,7 @@ class MainPage extends StatelessWidget {
                                   image: NetworkImage(index),
                                   fit: BoxFit.cover,
                                   placeholder:
-                                  AssetImage('assets/images/loading.gif'),
+                                  AssetImage('assets/images/loader.gif'),
                                 ),
                               ),
                             ),
@@ -111,7 +111,7 @@ class MainPage extends StatelessWidget {
                             image: NetworkImage(_popularImages[index]),
                             fit: BoxFit.cover,
                             placeholder:
-                            AssetImage('assets/images/loading.gif'),
+                            AssetImage('assets/images/loader.gif'),
                           ),
                         ),
                       ),
