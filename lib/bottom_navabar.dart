@@ -1,153 +1,219 @@
-library bottom_navy_bar;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
-class BottomNavyBar extends StatefulWidget {
+class ExpandingDisplayItem extends StatefulWidget {
+  /// The title of the item in the BottomNavigationBar
+  final String title;
 
-  int selectedIndex;
-  final double iconSize;
-  final Color backgroundColor;
-  final bool showElevation;
-  final List<BottomNavyBarItem> items;
-  final ValueChanged<int> onItemSelected;
+  /// The icon in the item of the BottomNavigationBar
+  final IconData icon;
 
-  BottomNavyBar(
-      {Key key,
-        this.selectedIndex = 0,
-        this.showElevation = true,
-        this.iconSize = 24,
-        this.backgroundColor,
-        @required this.items,
-        @required this.onItemSelected}) {
-    assert(items != null);
-    assert(items.length >= 2 || items.length >= 5);
-    assert(onItemSelected != null);
-  }
+  /// The height of the box (Carries the BottomNavigationBar height).
+  final double height;
+
+  /// The animation controller to control the flip animation.
+  final AnimationController controller;
+
+  /// Callback for when the box is selected (Not when the box is reversed).
+  final VoidCallback onTapped;
+
+  /// The color of the icon and background when selected
+  final Color color;
+
+  ExpandingDisplayItem(
+      this.title,
+      this.icon,
+      this.height,
+      this.controller,
+      this.onTapped,
+      this.color,
+      );
 
   @override
-  _BottomNavyBarState createState() {
-    return _BottomNavyBarState(
-        items: items,
-        backgroundColor: backgroundColor,
-        iconSize: iconSize,
-        onItemSelected: onItemSelected);
-  }
+  _ExpandingDisplayItemState createState() => _ExpandingDisplayItemState();
 }
 
-class _BottomNavyBarState extends State<BottomNavyBar> {
+class _ExpandingDisplayItemState extends State<ExpandingDisplayItem>
+    with TickerProviderStateMixin {
+  /// Tween for going from 0 to pi/2 radian and vice versa.
+  Animation animation;
 
-  final double iconSize;
-  Color backgroundColor;
-  List<BottomNavyBarItem> items;
-
-  ValueChanged<int> onItemSelected;
+  /// Controller for controlling the Box.
+  AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-
-  }
-  _BottomNavyBarState(
-      {@required this.items,
-        this.backgroundColor,
-        this.iconSize,
-        @required this.onItemSelected});
-
-  Widget _buildItem(BottomNavyBarItem item, bool isSelected) {
-    return AnimatedContainer(
-      width: isSelected ? 125 : 50,
-      height: double.maxFinite,
-      duration: Duration(milliseconds: 270),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: isSelected ? item.activeColor.withOpacity(0.3) : backgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(50)),
-      ),
-      child: ListView(
-        shrinkWrap: true,
-        padding: EdgeInsets.all(0),
-        physics: NeverScrollableScrollPhysics(),
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: IconTheme(
-                  data: IconThemeData(
-                      size: iconSize,
-                      color: isSelected
-                          ? item.activeColor.withOpacity(1)
-                          : item.inactiveColor == null
-                          ? item.activeColor
-                          : item.inactiveColor),
-                  child: item.icon,
-                ),
-              ),
-              isSelected
-                  ? DefaultTextStyle.merge(
-                style: TextStyle(
-                    color: item.activeColor, fontWeight: FontWeight.bold),
-                child: item.title,
-              )
-                  : SizedBox.shrink()
-            ],
-          )
-        ],
-      ),
+    if (widget.controller == null) {
+      controller = AnimationController(
+          vsync: this, duration: Duration(milliseconds: 100));
+    } else {
+      controller = widget.controller;
+    }
+    animation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: controller, curve: Curves.linear),
     );
+
+    controller.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    backgroundColor = (backgroundColor == null)
-        ? Theme.of(context).bottomAppBarColor
-        : backgroundColor;
-
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 56,
-      padding: EdgeInsets.only(left: 8, right: 8, top: 6, bottom: 6),
-      decoration: BoxDecoration(
-          color: backgroundColor,
-          boxShadow: [
-            if(widget.showElevation)
-              BoxShadow(color: Colors.black12, blurRadius: 2)
-          ]),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: items.map((item) {
-          var index = items.indexOf(item);
-          return GestureDetector(
-            onTap: () {
-              onItemSelected(index);
-              setState(() {
-                widget.selectedIndex = index;
-              });
-            },
-            child: _buildItem(item, widget.selectedIndex == index),
-          );
-        }).toList(),
+    return InkWell(
+      onTap: () {
+        widget.onTapped();
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(
+            widget.color.red,
+            widget.color.green,
+            widget.color.blue,
+            animation.value / 2.5,
+          ),
+          borderRadius: BorderRadius.circular(100.0),
+        ),
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Icon(
+                widget.icon,
+                color: widget.color,
+                size: widget.height / 3.5,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: animation.value != 0.0
+                  ? Text(
+                widget.title,
+                style: TextStyle(
+                  color: widget.color,
+                  fontSize: (widget.height / 4) * animation.value,
+                ),
+              )
+                  : Container(),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class BottomNavyBarItem {
-  final Icon icon;
-  final Text title;
-  final Color activeColor;
-  final Color inactiveColor;
+/// An item in the ExpandingBottomBar
+class ExpandingBottomBarItem {
+  /// Icon to be displayed in the BottomNavigationBar
+  IconData icon;
 
-  BottomNavyBarItem(
-      {@required this.icon,
-        @required this.title,
-        this.activeColor = Colors.blue,
-        this.inactiveColor}) {
-    assert(icon != null);
-    assert(title != null);
-  }
+  /// Title of the item
+  String text;
+
+  /// The color of the selected item
+  Color selectedColor;
+
+  ExpandingBottomBarItem({
+    @required this.icon,
+    @required this.text,
+    @required this.selectedColor,
+  });
 }
+
+/// Main BottomNavigationBar class
+class ExpandingBottomBar extends StatefulWidget {
+  /// Height of the navigation bar item
+  final double navBarHeight;
+
+  /// Items in the BottomNavigationBar
+  final List<ExpandingBottomBarItem> items;
+
+  /// Duration of the selection animation
+  final Duration animationDuration;
+
+  /// The selected index of the bar
+  final int selectedIndex;
+
+  /// Callback when an item is selected
+  final ValueChanged<int> onIndexChanged;
+
+  /// The background color of the BottomNavigationBar
+  final Color backgroundColor;
+
+  ExpandingBottomBar({
+    this.navBarHeight = 100.0,
+    @required this.items,
+    this.animationDuration = const Duration(milliseconds: 200),
+    @required this.selectedIndex,
+    @required this.onIndexChanged,
+    this.backgroundColor = Colors.white,
+  }) : assert(items.length >= 2);
+
+  @override
+  _ExpandingBottomBarState createState() => _ExpandingBottomBarState();
+}
+
+class _ExpandingBottomBarState extends State<ExpandingBottomBar>
+    with TickerProviderStateMixin {
+  /// Hosts all the controllers controlling the boxes.
+  List<AnimationController> _controllers = [];
+
+  /// The current chosen index
+  int indexChosen = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialise all animation controllers.
+    for (int i = 0; i < widget.items.length; i++) {
+      _controllers.add(
+        AnimationController(
+          vsync: this,
+          duration: widget.animationDuration,
+        ),
+      );
+    }
+    // Start animation for initially selected controller.
+    _controllers[widget.selectedIndex].forward();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _changeValue();
+    return Container(
+      height: widget.navBarHeight,
+      color: widget.backgroundColor,
+      child: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: widget.items.map((item) {
+            int index = widget.items.indexOf(item);
+            return ExpandingDisplayItem(
+              item.text,
+              item.icon,
+              widget.navBarHeight,
+              _controllers[index],
+                  () {
+                widget.onIndexChanged(index);
+              },
+              item.selectedColor,
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+
+  void _changeValue() {
+    _controllers.forEach((controller) => controller.reverse());
+    _controllers[widget.selectedIndex].forward();
+  }
+
+
+}
+
+
