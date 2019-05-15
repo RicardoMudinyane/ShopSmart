@@ -18,6 +18,7 @@
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
+        debugShowCheckedModeBanner: false,
         home: MyHomePage(title: 'Shop Smart'),
       );
     }
@@ -136,7 +137,7 @@
                   ),
                   ExpandingBottomBarItem(
                     icon: (Icons.settings),
-                    text:('Settings'),
+                    text:'Settings',
                     selectedColor:Colors.cyan[800]
 
                   ),
