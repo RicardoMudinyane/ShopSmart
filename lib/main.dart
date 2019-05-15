@@ -4,6 +4,7 @@
   import 'package:shop_smart/screens/shop.dart';
   import 'package:shop_smart/screens/mylist.dart';
   import 'package:shop_smart/screens/settings.dart';
+  import 'package:shop_smart/screens/page.dart';
 
 
   void main() => runApp(MyApp());
@@ -13,11 +14,11 @@
     @override
     Widget build(BuildContext context) {
       return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Shop Smart',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
+        home: MyHomePage(title: 'Shop Smart'),
       );
     }
   }
@@ -35,7 +36,6 @@
 
     var pageIndex = 0;
     PageController pageController = PageController();
-    List<String> wallpapers = ['Batman', 'Minimal', 'Apple'];
 
     @override
     void dispose() {
@@ -43,11 +43,61 @@
       super.dispose();
     }
 
-      @override
+    @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+        appBar: AppBar(title: Text(widget.title) ,backgroundColor: Colors.deepPurple[800],),
+
+
+        drawer: new Drawer(
+          child: new ListView(
+            children: <Widget>[
+
+              new UserAccountsDrawerHeader(
+                accountEmail: new Text("1355115@students.wits.ac.za"),
+                accountName: new Text("Ricardo Mudinyane"),
+
+                currentAccountPicture: new GestureDetector(
+                  child: new CircleAvatar(
+                    backgroundImage: new NetworkImage('https://d2935z6y6s92pm.cloudfront.net/wp-content/uploads/2013/06/Cars.jpg'),
+                  ),
+                  onTap: () => print("This is your current account."),
+                ),
+              ),
+
+              new ListTile(
+                  title: new Text("Profile"),
+                  trailing: new Icon(Icons.account_circle),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("My Profile")));
+                  }
+              ),
+
+              new ListTile(
+                  title: new Text("About"),
+                  trailing: new Icon(Icons.info),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("About Page")));
+                  }
+              ),
+              new ListTile(
+                  title: new Text("Share"),
+                  trailing: new Icon(Icons.share),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new Page("Share")));
+                  }
+              ),
+              new Divider(),
+              new ListTile(
+                title: new Text("Log-out"),
+                trailing: new Icon(Icons.power_settings_new),
+                onTap: () => Navigator.pop(context),
+              ),
+            ],
+          ),
         ),
 
         body: Container(
