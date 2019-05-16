@@ -10,7 +10,7 @@ class SettingsPage extends StatelessWidget {
       //appBar: new AppBar(title: new Text(title), backgroundColor: Colors.redAccent,),
 
         body: Center(
-          child: Text("Sttings Screen"),
+          child: Text("Settings Screen"),
         )
 
 

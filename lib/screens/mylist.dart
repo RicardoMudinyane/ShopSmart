@@ -22,16 +22,6 @@ class MyListPageState extends State<MyListPage> {
       tasks.add(new Task("Call with Mike", "Discuss about release", "15:00", Colors.amber));
       tasks.add(new Task("Update", "Update website with new design", "15:30", Colors.green));
       tasks.add(new Task("Email", "Respond to Charles Email", "16:30", Colors.blue));
-      tasks.add(new Task("Meeting", "Room 408", "12:30", Colors.red));
-      tasks.add(new Task("Monthly Report", "Check with quality team", "14:30", Colors.purple));
-      tasks.add(new Task("Call with Mike", "Discuss about release", "15:00", Colors.amber));
-      tasks.add(new Task("Update", "Update website with new design", "15:30", Colors.green));
-      tasks.add(new Task("Email", "Respond to Charles Email", "16:30", Colors.blue));
-      tasks.add(new Task("Meeting", "Room 408", "12:30", Colors.red));
-      tasks.add(new Task("Monthly Report", "Check with quality team", "14:30", Colors.purple));
-      tasks.add(new Task("Call with Mike", "Discuss about release", "15:00", Colors.amber));
-      tasks.add(new Task("Update", "Update website with new design", "15:30", Colors.green));
-      tasks.add(new Task("Email", "Respond to Charles Email", "16:30", Colors.blue));
     });
 
   }
@@ -42,6 +32,7 @@ class MyListPageState extends State<MyListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: MediaQuery.of(context).size.width,
 
 
                 child: ListView.builder(
@@ -53,13 +44,22 @@ class MyListPageState extends State<MyListPage> {
 
                       return Dismissible(
                         key: Key(tasks[position].toString()),
+
+                        background: _myHiddenContainer(
+                            tasks[position].status
+                        ),
+
                         child: _myListContainer(
                             tasks[position].taskname, tasks[position].subtask, tasks[position].tasktime, tasks[position].status
                         ),
                         onDismissed: (direction){
+
                           if(direction == DismissDirection.startToEnd){
                             Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text("Delete")));
+                                SnackBar(content: Text("Removed",
+                                  style: TextStyle(color: Colors.red),
+                                    textAlign: TextAlign.center
+                                )));
                             if(tasks.contains(tasks.removeAt(position))){
                               setState(() {
                                 tasks.remove(tasks.removeAt(position));
@@ -68,11 +68,19 @@ class MyListPageState extends State<MyListPage> {
                           }else{
                             if(direction == DismissDirection.endToStart){
                               Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text("Archive"))
+                                  SnackBar(content: Text("Item Bought",
+                                      style: TextStyle(color: Colors.green),
+                                      textAlign: TextAlign.center))
                               );
                               // Archive functionality
+                              if(tasks.contains(tasks.removeAt(position))){
+                                setState(() {
+                                  tasks.remove(tasks.removeAt(position));
+                                });
+                              }
                             }
                           }
+
                         },
                       );
 
@@ -93,7 +101,7 @@ class MyListPageState extends State<MyListPage> {
                 Color taskcolor;
 
                 return AlertDialog(
-                  title: Text("New Task"),
+                  title: Text("New Item"),
                   content: Container(
                     height: 250.0,
                     child: Column(
@@ -104,7 +112,7 @@ class MyListPageState extends State<MyListPage> {
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Task Title",
+                              hintText: "Item Name",
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
@@ -116,7 +124,7 @@ class MyListPageState extends State<MyListPage> {
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Sub Task",
+                              hintText: "Price",
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
@@ -175,7 +183,7 @@ class MyListPageState extends State<MyListPage> {
                             textAlign: TextAlign.left,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: "Task Time",
+                              hintText: "Date",
                               hintStyle: TextStyle(color: Colors.grey),
                             ),
                           ),
@@ -212,21 +220,36 @@ class MyListPageState extends State<MyListPage> {
   }
 
   Widget _myListContainer(String taskname, String subtask, String taskTime, Color taskColor){
+
     return Padding(
+
       padding: const EdgeInsets.all(8.0),
+
       child: Container(
-        height: 100.0,
+        height: 70.0,
+        decoration: new BoxDecoration(
+            borderRadius: BorderRadius.circular(7.0)
+        ),
+
         child: Material(
           color: Colors.white,
           elevation: 14.0,
           shadowColor: Color(0x802196F3),
+          borderRadius: BorderRadius.circular(9.0),
+
           child: Container(
+
+            decoration: new BoxDecoration(
+                borderRadius: BorderRadius.circular(7.0)
+            ),
+
             child: Row(
               children: <Widget>[
                 Container(
-                  height: 100.0,
-                  width: 10.0,
+                  height: 70.0,
+                  width: 7.0,
                   color: taskColor,
+
                 ),
                 Expanded(
                   child: Padding(
@@ -274,6 +297,50 @@ class MyListPageState extends State<MyListPage> {
     );
   }
 
+  Widget _myHiddenContainer(Color taskColor){
 
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      color: taskColor,
+
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+
+          Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+                icon: Icon(FontAwesomeIcons.solidTrashAlt),
+                color: Colors.white,
+                onPressed: (){
+                  setState(() {
+
+                  });
+                }),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+                icon: Icon(FontAwesomeIcons.archive),
+                color: Colors.white,
+                onPressed: (){
+                  setState(() {
+
+                  });
+                }),
+          ),
+        ],
+      ),
+    );
+
+  }
+
+  void _restitchDress (){
+
+    // Some code Here
+
+  }
 
 }
+
+
