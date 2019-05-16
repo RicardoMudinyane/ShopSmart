@@ -33,6 +33,7 @@ dependencies:
   flutter_bloc:
   bloc:
   shared_preferences:
+  font_awesome_flutter: ^8.4.0
 
 dev_dependencies:
   flutter_test:

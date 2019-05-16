@@ -19,6 +19,7 @@
           primarySwatch: Colors.blue,
         ),
         home: MyHomePage(title: 'Shop Smart'),
+        debugShowCheckedModeBanner: false,
       );
     }
   }
@@ -46,7 +47,7 @@
     @override
     Widget build(BuildContext context) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.title) ,backgroundColor: Colors.deepPurple[800],),
+        appBar: AppBar(title: Text(widget.title) ,backgroundColor: Colors.deepPurple[800], centerTitle: true,),
 
 
         drawer: new Drawer(
