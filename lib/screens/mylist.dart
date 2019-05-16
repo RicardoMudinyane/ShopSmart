@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shop_smart/task.dart';
+import 'package:flip_card/flip_card.dart';
 
 class MyListPage extends StatefulWidget {
   @override
@@ -9,7 +10,11 @@ class MyListPage extends StatefulWidget {
 
 class MyListPageState extends State<MyListPage> {
 
-  final List<Task> tasks = new List();
+  final List<Task> tasks_clothes = new List();
+  final List<Task> tasks_food = new List();
+
+  bool _foods = false;
+  bool _clothes = false;
 
 
   @override
@@ -17,11 +22,17 @@ class MyListPageState extends State<MyListPage> {
     super.initState();
 
     setState(() {
-      tasks.add(new Task("Meeting", "Room 408", "12:30", Colors.red));
-      tasks.add(new Task("Monthly Report", "Check with quality team", "14:30", Colors.purple));
-      tasks.add(new Task("Call with Mike", "Discuss about release", "15:00", Colors.amber));
-      tasks.add(new Task("Update", "Update website with new design", "15:30", Colors.green));
-      tasks.add(new Task("Email", "Respond to Charles Email", "16:30", Colors.blue));
+      tasks_clothes.add(new Task("Jersey", "R190.00", "Refinay", Colors.deepPurple[600]));
+      tasks_clothes.add(new Task("Adidas T-shirt", "R80.00", "Studio 88", Colors.deepPurple[600]));
+      tasks_clothes.add(new Task("Adidas Shorts", "R120.00", "Studio 88", Colors.deepPurple[600]));
+      tasks_clothes.add(new Task("Relay Flops", "R100.00", "Markham", Colors.deepPurple[600]));
+      tasks_clothes.add(new Task("Bras", "R100.00", "Legit", Colors.deepPurple[600]));
+
+      tasks_food.add(new Task("Polony", "R30", "Pick and Pay", Colors.green));
+      tasks_food.add(new Task("Braai Pack", "R150", "Pick and Pay", Colors.green));
+      tasks_food.add(new Task("Vegies", "R50", "Fruit & Vegiese", Colors.green));
+      tasks_food.add(new Task("Ice Cream", "R50", "Shoprite", Colors.green));
+      tasks_food.add(new Task("Rice and Things", "R200", "P&P",Colors.green));
     });
 
   }
@@ -31,63 +42,130 @@ class MyListPageState extends State<MyListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
+      body:
 
+      FlipCard(
+        direction: FlipDirection.VERTICAL, // default
 
-                child: ListView.builder(
+        front: Container(
 
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
 
+              itemCount: tasks_clothes.length,
+              itemBuilder: (context, position){
 
-                    itemCount: tasks.length,
-                    itemBuilder: (context, position){
+                _foods = false;
+                _clothes = true;
 
-                      return Dismissible(
-                        key: Key(tasks[position].toString()),
+                return Dismissible(
+                  key: Key(tasks_clothes[position].toString()),
 
-                        background: _myHiddenContainer(
-                            tasks[position].status
-                        ),
+                  background: _myHiddenContainer(
+                      tasks_clothes[position].status
+                  ),
 
-                        child: _myListContainer(
-                            tasks[position].taskname, tasks[position].subtask, tasks[position].tasktime, tasks[position].status
-                        ),
-                        onDismissed: (direction){
+                  child: _myListContainer(
+                      tasks_clothes[position].taskname, tasks_clothes[position].subtask, tasks_clothes[position].tasktime, tasks_clothes[position].status
+                  ),
+                  onDismissed: (direction){
 
-                          if(direction == DismissDirection.startToEnd){
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text("Removed",
-                                  style: TextStyle(color: Colors.red),
-                                    textAlign: TextAlign.center
-                                )));
-                            if(tasks.contains(tasks.removeAt(position))){
-                              setState(() {
-                                tasks.remove(tasks.removeAt(position));
-                              });
-                            }
-                          }else{
-                            if(direction == DismissDirection.endToStart){
-                              Scaffold.of(context).showSnackBar(
-                                  SnackBar(content: Text("Item Bought",
-                                      style: TextStyle(color: Colors.green),
-                                      textAlign: TextAlign.center))
-                              );
-                              // Archive functionality
-                              if(tasks.contains(tasks.removeAt(position))){
-                                setState(() {
-                                  tasks.remove(tasks.removeAt(position));
-                                });
-                              }
-                            }
-                          }
-
-                        },
-                      );
-
+                    if(direction == DismissDirection.startToEnd){
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text("Removed",
+                              style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center
+                          )));
+                      if(tasks_clothes.contains(tasks_clothes.removeAt(position))){
+                        setState(() {
+                          tasks_clothes.remove(tasks_clothes.removeAt(position));
+                        });
+                      }
+                    }else{
+                      if(direction == DismissDirection.endToStart){
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Item Bought",
+                                style: TextStyle(color: Colors.green),
+                                textAlign: TextAlign.center))
+                        );
+                        // Archive functionality
+                        if(tasks_clothes.contains(tasks_clothes.removeAt(position))){
+                          setState(() {
+                            tasks_clothes.remove(tasks_clothes.removeAt(position));
+                          });
+                        }
+                      }
                     }
-                ),
+
+                  },
+                );
+              }
+          ),
+        ),
+
+        back: Container(
+
+          width: MediaQuery.of(context).size.width,
+
+          child: ListView.builder(
+
+
+              itemCount: tasks_food.length,
+              itemBuilder: (context, position){
+
+
+
+                return Dismissible(
+                  key: Key(tasks_food[position].toString()),
+
+                  background: _myHiddenContainer(
+                      tasks_food[position].status
+                  ),
+
+                  child: _myListContainer(
+                      tasks_food[position].taskname, tasks_food[position].subtask, tasks_food[position].tasktime, tasks_food[position].status
+                  ),
+                  onDismissed: (direction){
+
+                    if(direction == DismissDirection.startToEnd){
+                      Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text("Removed",
+                              style: TextStyle(color: Colors.red),
+                              textAlign: TextAlign.center
+                          )));
+                      if(tasks_food.contains(tasks_food.removeAt(position))){
+                        setState(() {
+                          tasks_food.remove(tasks_food.removeAt(position));
+                        });
+                      }
+                    }else{
+                      if(direction == DismissDirection.endToStart){
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text("Item Bought",
+                                style: TextStyle(color: Colors.green),
+                                textAlign: TextAlign.center))
+                        );
+                        // Archive functionality
+                        if(tasks_food.contains(tasks_food.removeAt(position))){
+                          setState(() {
+                            tasks_food.remove(tasks_food.removeAt(position));
+                          });
+                        }
+                      }
+                    }
+
+                  },
+                );
+
+              }
+          ),
+
+
+        ),
 
       ),
+
+
       floatingActionButton: new FloatingActionButton(
 
         onPressed: (){
@@ -200,12 +278,15 @@ class MyListPageState extends State<MyListPage> {
                       child: Text("Add", style: new TextStyle(
                           color: Colors.white
                       ),),
-                      onPressed: (){
-                        setState(() {
-                          tasks.add(new Task(taskval.text, subval.text, tasktime.text, taskcolor));
-                        });
+
+//                errorText: _validate_eml ? 'Email is required' : null,
+                      onPressed: _clothes ? (){
+                        setState(() {tasks_clothes.add(new Task(taskval.text, subval.text, tasktime.text, taskcolor));});
                         Navigator.pop(context);
-                      },
+                      }: (){
+                        setState(() {tasks_food.add(new Task(taskval.text, subval.text, tasktime.text, taskcolor));});
+                        Navigator.pop(context);
+                      }
                     ),
                   ],
                 );
@@ -331,7 +412,9 @@ class MyListPageState extends State<MyListPage> {
           ),
         ],
       ),
+
     );
+
 
   }
 
