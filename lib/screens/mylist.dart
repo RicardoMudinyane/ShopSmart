@@ -13,7 +13,7 @@ class MyListPageState extends State<MyListPage> {
   final List<Task> tasks_clothes = new List();
   final List<Task> tasks_food = new List();
 
-  bool _foods = false;
+//  bool _foods = false;
   bool _clothes = false;
 
 
@@ -33,6 +33,7 @@ class MyListPageState extends State<MyListPage> {
       tasks_food.add(new Task("Vegies", "R50", "Fruit & Vegiese", Colors.green));
       tasks_food.add(new Task("Ice Cream", "R50", "Shoprite", Colors.green));
       tasks_food.add(new Task("Rice and Things", "R200", "P&P",Colors.green));
+
     });
 
   }
@@ -42,6 +43,7 @@ class MyListPageState extends State<MyListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       body:
 
       FlipCard(
@@ -55,7 +57,7 @@ class MyListPageState extends State<MyListPage> {
               itemCount: tasks_clothes.length,
               itemBuilder: (context, position){
 
-                _foods = false;
+//                _foods = false;
                 _clothes = true;
 
                 return Dismissible(
@@ -153,14 +155,10 @@ class MyListPageState extends State<MyListPage> {
                         }
                       }
                     }
-
                   },
                 );
-
               }
           ),
-
-
         ),
 
       ),
@@ -297,6 +295,7 @@ class MyListPageState extends State<MyListPage> {
         tooltip: "Increment",
         child: new Icon(Icons.add , size: 32.0,),
       ),
+
     );
   }
 

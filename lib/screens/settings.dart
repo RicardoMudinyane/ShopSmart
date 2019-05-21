@@ -1,63 +1,156 @@
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
+  final Function() onPressed;
+  final String tooltip;
+  final IconData icon;
 
+  SettingsPage({this.onPressed, this.tooltip, this.icon});
 
   @override
-  Widget build(BuildContext context) {
-    return new Scaffold(
-
-      //appBar: new AppBar(title: new Text(title), backgroundColor: Colors.redAccent,),
-
-        body: GestureDetector(
-            child: Center(
-              child: Text('Open route')),
-
-            onVerticalDragUpdate: (dragUpdateDetails) {
-
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SecondRoute()));
-
-            }),
-
-
-    );
-  }
+  SettingsPageState createState() => SettingsPageState();
 }
 
-class FirstRoute extends StatelessWidget {
+class SettingsPageState extends State<SettingsPage>
+    with SingleTickerProviderStateMixin {
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _buttonColor;
+  Animation<double> _animateIcon;
+  Animation<double> _translateButton;
+  Curve _curve = Curves.easeOut;
+  double _fabHeight = 56.0;
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('First Route'),
+  initState() {
+    _animationController =
+    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+      ..addListener(() {
+        setState(() {});
+      });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _buttonColor = ColorTween(
+      begin: Colors.deepPurple[800],
+      end: Colors.cyan[800],
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: Curves.linear,
       ),
-      body: GestureDetector(
-          child: Center(
-              child: Text('second route')),
-          onVerticalDragUpdate: (dragUpdateDetails) {
+    ));
+    _translateButton = Tween<double>(
+      begin: _fabHeight,
+      end: -14.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.0,
+        0.75,
+        curve: _curve,
+      ),
+    ));
+    super.initState();
+  }
 
-            Navigator.push(context, MaterialPageRoute(builder: (context) => SettingsPage()));
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
-          }),
+  animate() {
+    if (!isOpened) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isOpened = !isOpened;
+  }
+
+  Widget add() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: null,
+        tooltip: 'Add',
+        child: Icon(Icons.add),
+      ),
     );
   }
-}
 
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
+  Widget image() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: null,
+        tooltip: 'Image',
+        child: Icon(Icons.image),
       ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
+    );
+  }
+
+  Widget inbox() {
+    return Container(
+      child: FloatingActionButton(
+        onPressed: null,
+        tooltip: 'Inbox',
+        child: Icon(Icons.inbox),
+      ),
+    );
+  }
+
+  Widget toggle() {
+    return Container(
+      child: FloatingActionButton(
+        backgroundColor: _buttonColor.value,
+        onPressed: animate,
+        tooltip: 'Toggle',
+        child: AnimatedIcon(
+          icon: AnimatedIcons.menu_close,
+          progress: _animateIcon,
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return new
+      Padding(
+        padding: const EdgeInsets.all(19.0),
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Transform(
+            transform: Matrix4.translationValues(
+              0.0,
+              _translateButton.value * 3.0,
+              0.0,
+            ),
+            child: add(),
+          ),
+          Transform(
+            transform: Matrix4.translationValues(
+              0.0,
+              _translateButton.value * 2.0,
+              0.0,
+            ),
+            child: image(),
+          ),
+          Transform(
+            transform: Matrix4.translationValues(
+              0.0,
+              _translateButton.value,
+              0.0,
+            ),
+            child: inbox(),
+          ),
+          toggle(),
+        ],
+        ),
+
+      );
   }
 }
